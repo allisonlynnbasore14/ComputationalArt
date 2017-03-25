@@ -1,4 +1,4 @@
-""" Make an awesome random computation art piece! """
+""" Making Movies of Computational Art """
 
 import random
 from PIL import Image
@@ -178,18 +178,30 @@ def test_image(filename, x_size=350, y_size=350):
     im.save(filename)
 
 
-def generate_art(filename, x_size=350, y_size=350):
+def generate_art(filename1,x_size=350, y_size=350):
     """ Generate computational art and save as an image file.
 
         filename: string filename for image (should be .png)
         x_size, y_size: optional args to set image dimensions (default: 350)
     """
+
     # Functions for red, green, and blue channels - where the magic happens!
     #this is going to ask build random for a randomly generated function list that evalute will unpack and impliment
     red_function = build_random_function(7,9)
     #red_function = ["prod",["prod",["half",["half",["third"]]]]]
     green_function = build_random_function(7,9)
     blue_function = build_random_function(7,9)
+    mlist = []
+    for p1 in range(0,50):
+        #making a list of random intergers from 1 to 200
+        mlist.append(random.randint(1,200))
+    for p in range(0,50):
+        #how many frames you want
+        m = mlist[p]
+        #using the same functions to make the frames of the movie
+        generate_movie(filename1, x_size, y_size, m, p, red_function, green_function, blue_function)
+
+def generate_movie(filename1, x_size, y_size, m, p, red_function, green_function, blue_function):
     # Create image and loop over all pixels
     im = Image.new("RGB", (x_size, y_size))
     pixels = im.load()
@@ -198,13 +210,18 @@ def generate_art(filename, x_size=350, y_size=350):
             x = remap_interval(i, 0, x_size, -1, 1)
             y = remap_interval(j, 0, y_size, -1, 1)
             pixels[i, j] = (
-                    color_map(evaluate_random_function(red_function, x, y)),
-                    color_map(evaluate_random_function(green_function, x, y)),
-                    color_map(evaluate_random_function(blue_function, x, y))
+                #the m is changing the frame a little bit each time
+                    color_map(evaluate_random_function(red_function, x, y)+((m)/100)),
+                    color_map(evaluate_random_function(green_function, x, y)+((m)/100)),
+                    color_map(evaluate_random_function(blue_function, x, y)+((m)/100))
                     )
+    if p < 10:
+        # Formating for making the names  of the files to be 001...020...etc.
+        im.save((filename1) + '00' +('%s' %(str(p)) + '.png'))
+    else:
+        im.save((filename1) + '0' +('%s' %(str(p)) + '.png'))
 
-    im.save(filename)
+#To make a movie: run >>> avconv -i myartmovie%03d.png -vb 20M mymovie10.avi
 
-
-generate_art("myart4.png", 350, 350)
+generate_art("myartmovie", 100, 100)
 
