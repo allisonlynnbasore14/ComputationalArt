@@ -1,4 +1,4 @@
-""" TODO: Put your header comment here """
+""" Make an awesome random computation art piece! """
 
 import random
 from PIL import Image
