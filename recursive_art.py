@@ -1,4 +1,4 @@
-""" TODO: Put your header comment here """
+""" Make Aweomse Computational Art"""
 
 import random
 from PIL import Image
